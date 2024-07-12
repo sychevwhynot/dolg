@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Список сотрудников{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Список сотрудников</h2>
+    <input class="form-control mb-4" id="searchInput" type="text" placeholder="Поиск сотрудников...">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th>Подразделение</th>
+                {% if request.user.is_buh or request.user.is_glav or request.user.is_admin %}
+                    <th>Действия</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody id="profileTable">
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.superlast_name }}</td>
+                    <td>{{ user.otdel }}</td>
+                    {% if request.user.is_buh or request.user.is_glav or request.user.is_admin %}
+                        <td>
+                            <a href="{% url 'shtraf:profile_detail' user.id %}" class="btn btn-info btn-sm">Просмотр</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- JavaScript для реализации динамического поиска -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        var searchText = this.value.toLowerCase();
+        var profileTable = document.getElementById('profileTable');
+        var rows = profileTable.getElementsByTagName('tr');
+        
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var found = false;
+            
+            for (var j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(searchText)) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (found) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    });
+</script>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+
+    .form-control {
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #117a8b;
+    }
+</style>
+{% endblock %}

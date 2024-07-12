@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Отчеты по штрафам{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Отчеты о снижениях</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                Начало
+                {{ form.start_date }}
+            </div>
+            <div class="form-group col-md-3">
+                Конец
+                {{ form.end_date }}
+            </div>
+            <div class="form-group col-md-3">
+                Отдел
+                {{ form.otdel }}
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
+            <button type="submit" name="generate_word" class="btn btn-success">Сгенерировать отчет в Word</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <div class="report-summary">
+        <h4>Общая сумма снижений: {{ total_shtrafy_sum }} руб.</h4>
+        <h4>Текущая сумма снижений: {{ total_dynamic_shtrafy_sum }} руб.</h4>
+    </div>
+
+    <table class="table table-bordered table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Дата наложения</th>
+                <th>Сотрудник</th>
+                <th>Сумма снижения</th>
+                <th>Причина</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shtraf in shtrafy %}
+                <tr>
+                    <td>{{ shtraf.date }}</td>
+                    <td>{{ shtraf.user.last_name }} {{ shtraf.user.first_name }} {{ shtraf.user.superlast_name }}({{ shtraf.user.otdel }})</td>
+                    <td>{{ shtraf.summa }} руб.</td>
+                    <td>{{ shtraf.reason }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">Нет данных для отображения</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+
+    h3, h4 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .report-summary h4 {
+        display: block;
+    }
+
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-group select,
+    .form-group input[type="text"],
+    .form-group input[type="date"] {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+</style>
+{% endblock %}

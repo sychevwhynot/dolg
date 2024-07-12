@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Создание штрафа{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Добавить снижение</h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_summa">Сумма снижения</label>
+            <input type="text" name="summa" class="form-control" id="id_summa" required>
+        </div>
+        <div class="form-group">
+            <label for="id_reason">Причина снижения</label>
+            <input type="text" name="reason" class="form-control" id="id_reason" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Создать</button>
+    </form>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #007bff;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+</style>
+{% endblock %}

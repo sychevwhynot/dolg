@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Детали подразделения - {{ otdel.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Детали подразделения - {{ otdel.name }}</h2>
+
+    <h3 class="mb-3">Сотрудники</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                {% if can_view_shtrafs %}
+                    <th>Общая сумма снижений</th>
+                    <th>Текущая сумма снижений</th>
+                    <th>Общая сумма списаний</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in user_data %}
+            <tr>
+                <td>{{ item.user.last_name }}</td>
+                <td>{{ item.user.first_name }}</td>
+                <td>{{ item.user.superlast_name }}</td>
+                {% if can_view_shtrafs %}
+                    <td>{{ item.total_shtrafy }} руб.</td>
+                    <td>{{ item.dynamic_shtrafy }} руб.</td>
+                    <td>{{ item.total_spisanie }} руб.</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="shtraf-summary mt-4">
+        {% if can_view_shtrafs %}
+            <p><strong>Общая сумма всех снижений сотрудников:</strong> {{ total_shtrafy_sum_all }} руб.</p>
+            <p><strong>Текущая сумма задолженности всех сотрудников:</strong> {{ total_dynamic_shtrafy_sum_all }} руб.</p>
+        {% endif %}
+    </div>
+
+    {% if can_view_shtrafs %}
+        <h3 class="mb-3">Штрафы</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Сотрудник</th>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Причина</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shtraf in all_shtrafy %}
+                <tr>
+                    <td>{{ shtraf.user.last_name }} {{ shtraf.user.first_name }}</td>
+                    <td>{{ shtraf.date }}</td>
+                    <td>{{ shtraf.summa }} руб.</td>
+                    <td>{{ shtraf.reason }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+        color: #007bff;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}

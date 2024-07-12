@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Мой профиль - {{ user.last_name }} {{ user.first_name }}{% if user.superlast_name %} {{ user.superlast_name }}{% endif %} ({{ user.otdel }})</h2>
+    <div class="shtraf-summary mt-4">
+        <p><strong>Общая сумма снижений:</strong> {{ total_shtrafy }}</p>
+        <p><strong>Текущая сумма снижений:</strong> {{ dynamic_shtrafy }}</p>
+        <p><strong>Списано за текущий месяц:</strong> {{ total_spisanie_current_month }}</p>
+    </div>
+    <h3 class="mb-3">Снижения</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+                <th>Причина</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shtraf in shtrafy %}
+            <tr>
+                <td>{{ shtraf.date }}</td>
+                <td>{{ shtraf.summa }}</td>
+                <td>{{ shtraf.reason }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="mb-3">Списания</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for spisanie in spisaniya %}
+            <tr>
+                <td>{{ spisanie.created_at }}</td>
+                <td>{{ spisanie.summa }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+        color: #007bff;
+    }
+
+    .profile-info p, .shtraf-summary p {
+        font-size: 18px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+</style>
+{% endblock %}

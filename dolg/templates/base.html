@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Снижение премиальных выплат{% endblock %}</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'unnamed.png' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <style>
+        .header-link {
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+        .content-link a {
+            display: inline-block;
+            border: 1px solid #000000;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: black;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: url("{% static 'KotovaOneLove.jpg' %}") no-repeat center center;
+            background-size: cover;
+            color: #fff;
+            padding: 20px;
+        }
+        .header-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-container h1 {
+            flex-grow: 1;
+            text-align: center;
+            margin: 0;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            align-items: center;
+            margin-right: 90px;
+        }
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        header nav ul li {
+            margin: 0 10px;
+        }
+        header nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        main {
+            padding: 20px;
+        }
+        .header-button,
+        .content-link button {
+            background-color: #f87080;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .header-button:hover,
+        .content-link button:hover {
+            background-color: #e05c6e;
+        }
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Снижение премиальных выплат</h1>
+            <a href="{% url 'logout' %}" class="header-link">
+                <button class="header-button">Выйти</button>
+            </a>
+        </div>
+        <nav class="nav-container">
+            <ul>
+                <li><a class="header-link" href="{% url 'shtraf:my_profile' %}">Мой профиль</a></li>
+                <li><a class="header-link" href="{% url 'shtraf:profile_list' %}">Сотрудники</a></li>
+                <li><a class="header-link" href="{% url 'shtraf:otdel_list' %}">Подразделения</a></li>
+                {% if request.user.is_glav %}
+                    <li><a class="header-link" href="{% url 'shtraf:report_view' %}">Отчеты</a></li>
+                {% endif %}
+                {% if request.user.is_buh %}
+                    <li><a class="header-link" href="{% url 'shtraf:buh_report_view' %}">Бухгалтерия</a></li>
+                {% endif %}
+                {% if request.user.is_admin %}
+                    <li><a class="header-link" href="{% url 'shtraf:shtraf_report_view' %}">Администрация</a></li>
+                {% endif %}
+                {% if request.user.is_leed %}
+                    <li><a class="header-link" href="{% url 'shtraf:leed_report_view' %}">Руководители</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        <div class="content-link">
+            <button>Пример кнопки</button>
+        </div>
+        {% endblock %}
+    </main>
+    <!-- Подключение Bootstrap JS и Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Подключение Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: 'Выберите или введите сотрудника',
+                ajax: {
+                    url: $('.select2').attr('data-ajax--url'),
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1,
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

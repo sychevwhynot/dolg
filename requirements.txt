@@ -1,0 +1,10 @@
+asgiref==3.8.1
+Django==4.2.13
+django-autocomplete-light==3.11.0
+lxml==5.2.2
+psycopg2-binary==2.9.9
+python-docx==1.1.2
+sqlparse==0.5.0
+typing_extensions==4.12.2
+tzdata==2024.1
+waitress==3.0.0
