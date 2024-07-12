@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Детали профиля - {{ user.last_name }} {{ user.first_name }}{% if user.superlast_name %} {{ user.superlast_name }}{% endif %} {% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Детали профиля - {{ user.last_name }} {{ user.first_name }}{% if user.superlast_name %} {{ user.superlast_name }}{% endif %} ({{ user.otdel }})</h2>
+
+    <div class="profile-info mb-4">
+        <p><strong>Подразделение:</strong> {{ user.otdel }}</p>
+        {% if request.user.is_authenticated and request.user.is_admin %}
+        <a class="btn btn-primary mb-3" href="{% url 'shtraf:create_shtraf' pk=user.pk %}">Добавить снижение</a>
+        {% endif %}
+    </div>
+    <br>
+    {% if request.user.is_buh %}
+    <div class="deduct-form mt-4">
+        <h4>Вычесть сумму снижений</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Вычесть</button>
+        </form>
+    </div>
+    {% endif %}
+    <br>
+    <div class="shtraf-summary mt-4">
+        <p><strong>Общая сумма снижений:</strong> {{ total_shtrafy }}</p>
+        <p><strong>Текущая сумма снижений:</strong> {{ dynamic_shtrafy }}</p>
+        <p><strong>Списано за текущий месяц:</strong> {{ total_spisanie_current_month }}</p>
+    </div>
+
+    <h3 class="mb-3">Снижение</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+                <th>Причина</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for shtraf in shtrafy %}
+            <tr>
+                <td>{{ shtraf.date }}</td>
+                <td>{{ shtraf.summa }}</td>
+                <td>{{ shtraf.reason }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3 class="mb-3">Списания</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for spisanie in spisaniya %}
+            <tr>
+                <td>{{ spisanie.created_at }}</td>
+                <td>{{ spisanie.summa }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3, h4 {
+        color: #007bff;
+    }
+
+    .profile-info p, .shtraf-summary p {
+        font-size: 18px;
+    }
+
+    .table {
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+</style>
+{% endblock %}
